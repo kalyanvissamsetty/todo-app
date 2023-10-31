@@ -1,0 +1,45 @@
+.card{
+   max-width: 70%;
+   @media (min-width: 767px) {
+    max-width: 60%; /* Adjust width for mobile screens */
+   }
+   border: 1px solid;
+   border-color: rgba(0, 0, 0, 0.2); 
+   border-radius: 10px;
+   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+   margin: auto;
+   display: flex;
+   flex-direction: column;
+}
+
+.input-parent{
+    display: flex;
+    flex-direction: column;
+    margin: 20px;
+    align-items: start;
+}
+
+.input-parent input, .input-parent textarea{
+    width: 100%;
+    margin-top: 7px;
+}
+.login-button{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+
+}
+
+button{
+    background-color: black;
+    outline: none;
+    border: none;
+    color: white;
+    padding: 7px 13px;
+    border-radius: 7px;
+}
+
+button:hover{
+    background-color: gray;
+    cursor: pointer;
+}
