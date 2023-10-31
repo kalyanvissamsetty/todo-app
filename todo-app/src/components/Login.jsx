@@ -1,5 +1,9 @@
+import { useRef } from "react";
 import "../css/Home.css";
 export default function Login() {
+
+  let emailRef = useRef("")
+  let passwordRef = useRef("")
   return (
     <div className="card">
       <center>
@@ -8,12 +12,12 @@ export default function Login() {
       <div className="input-parent">
         <label className="label">Email</label>
 
-        <input className="input" placeholder="Enter Email"></input>
+        <input className="input" ref={emailRef} placeholder="Enter Email"></input>
       </div>
       <div className="input-parent">
         <label className="label">Password</label>
 
-        <input className="password" placeholder="Enter Password"></input>
+        <input className="password" ref={passwordRef} placeholder="Enter Password"></input>
       </div>
       <div className="login-button">
         <button>Login</button>
