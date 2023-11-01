@@ -1,14 +1,16 @@
 import "../css/Home.css";
 import axios from "axios";
 import { useRef, useState } from "react";
-import {useNavigate} from "react-router-dom"
+import { Navigate,useNavigate } from "react-router-dom";
+import MyContext from "../context/MyContext";
+import { useContext } from "react";
 function validatePassword(password) {
   const passwordPattern =
     /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#])[A-Za-z\d@$!%*?&#]{6,}$/;
   return passwordPattern.test(password);
 }
 export default function SignUp() {
-  
+  const { isLoggedIn } = useContext(MyContext);
   let usernameEntered = useRef("")
   let emailEntered = useRef("")
   let passwordEntered = useRef("")
@@ -36,7 +38,9 @@ export default function SignUp() {
         console.log(error)
       });
   }
-  
+  if(isLoggedIn){
+    return <Navigate to={"/"} />;
+  }
   return (
     <form onSubmit={handleFormSubmit}>
       <div className="card">

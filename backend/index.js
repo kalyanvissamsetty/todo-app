@@ -37,7 +37,13 @@ const Todos = mongoose.model("Todos", todo);
 app.get("/", (req, res) => {
   res.send("Hi from Express");
 });
-
+app.get('/extract',(req,res)=>{
+  // const {token} = req.headers
+  // const validToken = token.split(' ')[1]
+  const tokenData = jwt.verify(req.header("Authorization").split(' ')[1], process.env.SECRET);
+  
+  res.json(tokenData)
+})
 app.post("/signup", async (req, res) => {
   try {
     const user_data = new Users(req.body);
