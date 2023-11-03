@@ -40,9 +40,20 @@ app.get("/", (req, res) => {
 app.get('/extract',(req,res)=>{
   // const {token} = req.headers
   // const validToken = token.split(' ')[1]
-  const tokenData = jwt.verify(req.header("Authorization").split(' ')[1], process.env.SECRET);
+  try{
+    console.log(req.header("Authorization"));
+    if(req.header("Authorization") == undefined){
+      return res.status(403).json({
+        msg:"Invalid"
+      })
+    }
+    const tokenData = jwt.verify(req.header("Authorization").split(' ')[1], process.env.SECRET);
+    return res.json(tokenData);
+  }catch(error){
+    console.log(error)
+  }
+  return res.status(403)
   
-  res.json(tokenData)
 })
 app.post("/signup", async (req, res) => {
   try {

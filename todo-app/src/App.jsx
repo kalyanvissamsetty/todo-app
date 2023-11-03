@@ -7,8 +7,12 @@ import Signup from './components/Signup';
 import Navbar from './components/Navbar';
 import MyContext from "./context/MyContext";
 import axios from "axios";
+
+
+
 export default function App() {
-  const [isLoggedIn,setLoggedIn] = useState(!!localStorage.getItem("token"))
+  const [isLoggedIn, setLoggedIn] = useState(
+    !!localStorage.getItem("token") );
   const [username,setUsername] = useState('')
   useEffect(()=>{
     try{
