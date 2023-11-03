@@ -14,11 +14,18 @@ export default function App() {
   const [isLoggedIn, setLoggedIn] = useState(
     !!localStorage.getItem("token") );
   const [username,setUsername] = useState('')
+  const headers = {
+    Authorization: localStorage.getItem("token"),
+  };
+  const getTodosForUser = (setTodoData) => {
+    axios.get("http://localhost:3000/getTodos", { headers }).then((res) => {
+      setTodoData(res.data);
+      console.log(res.data);
+    });
+  };
   useEffect(()=>{
     try{
-      const headers = {
-        "Authorization": localStorage.getItem("token")
-      }
+      
       axios
       .get("http://localhost:3000/extract",{headers})
       .then((res) => {
@@ -36,12 +43,14 @@ export default function App() {
   },[])
   return (
     <>
-      <MyContext.Provider value={{isLoggedIn,setLoggedIn,username,setUsername}}>
+      <MyContext.Provider
+        value={{ isLoggedIn, setLoggedIn, username, setUsername }}
+      >
         <Navbar />
         <Routes>
           <Route
             path="/"
-            element={<Home isLoggedIn={isLoggedIn} setLoggedIn={setLoggedIn} />}
+            element={<Home getTodosForUser={getTodosForUser} />}
           />
           <Route
             path="/login"

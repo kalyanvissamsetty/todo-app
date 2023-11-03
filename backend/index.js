@@ -34,19 +34,38 @@ const todo = new mongoose.Schema({
 
 const Users = mongoose.model("Users", user);
 const Todos = mongoose.model("Todos", todo);
+
+
+const authenticateJWT = (req,res,next) =>{
+  const authHeader = req.header("Authorization");
+  console.log(authHeader)
+  if (authHeader) {
+    const token = authHeader.split(" ")[1];
+    jwt.verify(token, process.env.SECRET, (err, user) => {
+      if (err) {
+        console.log("kjh")
+        return res.sendStatus(403);
+      }
+      req.user = user;
+      next();
+    });
+  } else {
+    res.sendStatus(401);
+  }
+}
 app.get("/", (req, res) => {
   res.send("Hi from Express");
 });
-app.get('/extract',(req,res)=>{
+app.get('/extract',authenticateJWT,(req,res)=>{
   // const {token} = req.headers
   // const validToken = token.split(' ')[1]
   try{
-    console.log(req.header("Authorization"));
-    if(req.header("Authorization") == undefined){
-      return res.status(403).json({
-        msg:"Invalid"
-      })
-    }
+    // console.log(req.header("Authorization"));
+    // if(req.header("Authorization") == undefined){
+    //   return res.status(403).json({
+    //     msg:"Invalid"
+    //   })
+    // }
     const tokenData = jwt.verify(req.header("Authorization").split(' ')[1], process.env.SECRET);
     return res.json(tokenData);
   }catch(error){
@@ -76,8 +95,7 @@ app.post("/login", async (req, res) => {
           username: respUser.username,
           email: respUser.email,
         },
-        process.env.SECRET,
-        { expiresIn: "1800s" }
+        process.env.SECRET
       );
       res.status(200).send({username:respUser.username,email:respUser.email,token})
     }
@@ -89,6 +107,28 @@ app.post("/login", async (req, res) => {
   }
 
 });
+
+app.post("/addtodo",authenticateJWT,async (req,res)=>{
+  console.log("in add todo")
+  try{
+    const userRecord = await Users.findOne({email:req.user["email"]}).exec();
+    const todoData = { ...req.body, author: userRecord};
+    const todoRef = new Todos(todoData);
+    const savedTodo = await todoRef.save();
+    if (savedTodo) {
+      
+      res.status(200).json(savedTodo);
+    }
+  }catch(error){
+    res.status(403).send(error)
+  }
+  
+})
+app.get("/getTodos",authenticateJWT,async (req,res)=>{
+  const userRecord = await Users.findOne({ email: req.user["email"] }).exec();
+  const todoOfUser = await Todos.find({author:userRecord})
+  res.status(200).json(todoOfUser)
+})
 app.listen(process.env.BACKEND_PORT, () =>
   console.log("Server running from: ", process.env.BACKEND_PORT)
 );
