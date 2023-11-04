@@ -29,6 +29,22 @@
     margin-bottom: 15px;
 
 }
+table {
+  width: 60% !important; 
+  overflow: scroll;
+  border-collapse: collapse;
+}
+
+td {
+  
+ /* Allow text to wrap within table cells */
+ max-width: 150px;
+
+  padding: 4px; /* Add padding for cell content */
+  word-wrap: break-word;
+
+}
+
 
 button{
     background-color: black;

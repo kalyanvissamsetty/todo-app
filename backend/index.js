@@ -30,6 +30,7 @@ const todo = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Users",
   },
+  done: Boolean
 });
 
 const Users = mongoose.model("Users", user);
@@ -129,6 +130,38 @@ app.get("/getTodos",authenticateJWT,async (req,res)=>{
   const todoOfUser = await Todos.find({author:userRecord})
   res.status(200).json(todoOfUser)
 })
+
+app.put("/updateTodo/:id",authenticateJWT,async(req,res)=>{
+  console.log("kjbv")
+  const todoRecord= await Todos.findOne({_id:req.params.id}).exec()
+  if(todoRecord){
+    todoRecord.done = !todoRecord.done;
+    await todoRecord.save()
+    res
+      .status(200)
+      .json({ msg: "Updated successfuly", done: !todoRecord.done });
+  }
+  else{
+    res.status(404).send({
+      msg:"Can't find todo"
+    })
+  }
+})
+
+app.delete("/deleteTodo/:id",authenticateJWT,async(req,res)=>{
+  try{
+    const id = req.params.id
+    const result = await Todos.deleteOne({_id:id})
+    if(result.deletedCount === 1){
+      return res.status(200).json({ message: "Record deleted successfully" });
+    }
+    else{
+      return res.status(404).json({ message: "Record not found" });
+    }
+  }catch(err){
+    return res.status(500).json({ message: "An error occurred" });
+  }
+});
 app.listen(process.env.BACKEND_PORT, () =>
   console.log("Server running from: ", process.env.BACKEND_PORT)
 );

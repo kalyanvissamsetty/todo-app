@@ -23,9 +23,9 @@ export default function App() {
       console.log(res.data);
     });
   };
+  
   useEffect(()=>{
     try{
-      
       axios
       .get("http://localhost:3000/extract",{headers})
       .then((res) => {

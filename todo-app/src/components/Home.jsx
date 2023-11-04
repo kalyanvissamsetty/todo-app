@@ -21,13 +21,13 @@ export default function Home({ getTodosForUser }) {
     const todoData = {
       title: titleRef.current.value,
       description: descRef.current.value,
+      done:false
     };
 
     axios
       .post("http://localhost:3000/addtodo", todoData, { headers })
       .then((res) => {
         getTodos();
-        alert("Todo added");
       })
       .catch((err) => {
         console.log(err);
@@ -68,8 +68,12 @@ export default function Home({ getTodosForUser }) {
               </div>
             </div>
           </form>
-          
-          <ContentTable todoData={todoData} />
+
+          <ContentTable
+            todoData={todoData}
+            getTodosForUser={getTodosForUser}
+            setTodoData={setTodoData}
+          />
         </>
       ) : (
         <Login />
